@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { ProcesoLegal } from './proceso.entity';
 
 @Entity('users')
 export class User {
@@ -28,4 +29,7 @@ export class User {
 
   @Column({ type: 'timestamp', nullable: true })
   updatedAt?: Date;
+
+  @OneToMany(() => ProcesoLegal, proceso => proceso.abogadoAsignado)
+  procesosLegales: ProcesoLegal[];
 }

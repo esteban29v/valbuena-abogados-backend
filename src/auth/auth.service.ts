@@ -1,5 +1,5 @@
 // auth.service.ts
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../entities/user.entity';
 import * as bcrypt from 'bcrypt';
@@ -40,5 +40,22 @@ export class AuthService {
   async authenticate(user: any) {
     const payload = { username: user.username, sub: user.userId };
     return this.jwtService.sign(payload);
+  }
+
+  async findAllUsers(): Promise<User[]> {
+    return this.userRepository.find();
+  }
+
+  async findUserById(id: number): Promise<User> {
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new NotFoundException(`User  with ID ${id} not found`);
+    }
+    return user;
+  }
+
+  async deleteUser (id: number): Promise<void> {
+    const user = await this.findUserById(id);
+    await this.userRepository.remove(user);
   }
 }
