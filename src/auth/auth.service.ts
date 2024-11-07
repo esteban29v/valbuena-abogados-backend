@@ -42,6 +42,23 @@ export class AuthService {
     return this.jwtService.sign(payload);
   }
 
+  async updateUser (id: number, userData: Partial<User>): Promise<User> {
+    const user = await this.findUserById(id);
+  
+    
+    if (userData.password) {
+      userData.password = await bcrypt.hash(userData.password, 10);
+    }
+  
+    // Actualizamos solo los campos que se han proporcionado
+    await this.userRepository.update(id, {
+      ...user,
+      ...userData, 
+    });
+  
+    return this.findUserById(id);
+  }
+
   async findAllUsers(): Promise<User[]> {
     return this.userRepository.find();
   }

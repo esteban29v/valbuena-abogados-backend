@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany} from 'typeorm';
 import { User } from '../entities/user.entity';
 import { Documento } from './documento.entity';
 import { Audiencia } from './audiencia.entity';
@@ -12,7 +12,7 @@ export class ProcesoLegal {
   @Column()
   tipo: string;
 
-  @Column()
+  @Column({unique:true})
   numeroProceso: string;
 
   @ManyToOne(() => User, user => user.procesosLegales)
