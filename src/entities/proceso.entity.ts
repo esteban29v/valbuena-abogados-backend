@@ -3,6 +3,8 @@ import { User } from '../entities/user.entity';
 import { Documento } from './documento.entity';
 import { Audiencia } from './audiencia.entity';
 import { Notificacion } from './notificacion.entity';
+import { EtapaProceso, EtapasProceso } from 'src/procesos/etapas/etapa';
+import { Comentario} from './comentario.entity';
 
 @Entity('procesos_legales')
 export class ProcesoLegal {
@@ -27,14 +29,24 @@ export class ProcesoLegal {
   @Column()
   estado: string;
 
+  @Column({
+    type: 'enum',
+    enum: Object.keys(EtapasProceso),
+    default: 'INICIO',
+  })
+  etapa: EtapaProceso;
+
   @OneToMany(() => Documento, documento => documento.proceso)
-  documentos: Documento[];
+  documentos?: Documento[];
 
   @OneToMany(() => Audiencia, audiencia => audiencia.proceso)
-  audiencias: Audiencia[];
+  audiencias?: Audiencia[];
 
   @OneToMany(() => Notificacion, notificacion => notificacion.proceso)
-  notificaciones: Notificacion[];
+  notificaciones?: Notificacion[];
+
+  @OneToMany(() => Comentario, comentario => comentario.proceso) 
+  comentarios: Comentario[];
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   fechaCreacion: Date;

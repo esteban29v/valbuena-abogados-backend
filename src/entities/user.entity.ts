@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { ProcesoLegal } from './proceso.entity';
+import { Comentario } from './comentario.entity';
 
 @Entity('users')
 export class User {
@@ -32,4 +33,7 @@ export class User {
 
   @OneToMany(() => ProcesoLegal, proceso => proceso.abogadoAsignado)
   procesosLegales: ProcesoLegal[];
+
+  @OneToMany(() => Comentario, comentario => comentario.usuario)
+  comentarios: Comentario[];
 }
