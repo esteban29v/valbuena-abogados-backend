@@ -1,18 +1,19 @@
 import { Injectable ,ConflictException, NotFoundException} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm';
 import { Audiencia } from 'src/entities/audiencia.entity';
 import { ProcesoLegal } from '../entities/proceso.entity';
 import { CreateAudienciaDto } from './dto/create-audiencia.dto';
 import { UpdateAudienciaDto } from './dto/update-audiencia.dto';
+import { ProcesoLegalRepository } from '../repositories/proceso.repository';
+import { AudienciaRepository } from 'src/repositories/audiencia.repository';
 
 @Injectable()
 export class AudienciaService {
   constructor(
     @InjectRepository(Audiencia)
-    private audienciaRepository: Repository<Audiencia>,
+    private audienciaRepository: AudienciaRepository,
     @InjectRepository(ProcesoLegal)
-    private procesosRepository: Repository<ProcesoLegal>,
+    private procesosRepository: ProcesoLegalRepository,
   ) {}
   async create(createAudienciaDto: CreateAudienciaDto) {
 

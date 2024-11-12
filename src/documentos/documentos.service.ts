@@ -1,18 +1,19 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { Documento } from 'src/entities/documento.entity';
 import { CreateDocumentoDto } from './dto/create-documento.dto';
 import { UpdateDocumentoDto } from './dto/update-documento.dto';
 import { ProcesoLegal } from 'src/entities/proceso.entity';
+import { ProcesoLegalRepository } from 'src/repositories/proceso.repository';
+import { DocumentoRepository } from 'src/repositories/documento.repository';
 
 @Injectable()
 export class DocumentosService {
   constructor(
     @InjectRepository(Documento) 
-    private readonly documentoRepository: Repository<Documento>,
+    private readonly documentoRepository: DocumentoRepository,
     @InjectRepository(ProcesoLegal)
-    private procesosRepository: Repository<ProcesoLegal>,
+    private procesosRepository: ProcesoLegalRepository 
   ) {}
   async create(createDocumentoDto: CreateDocumentoDto): Promise<Documento> {
     const ingresado = await this.documentoRepository.findOne({where: {rutaArchivo: createDocumentoDto.rutaArchivo}})

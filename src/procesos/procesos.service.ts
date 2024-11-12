@@ -1,18 +1,18 @@
 import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { ProcesoLegal } from '../entities/proceso.entity';
 import { CreateProcesoDto } from './dto/create-proceso.dto';
 import { UpdateProcesoDto } from './dto/update-proceso.dto';
-import { User } from 'src/entities/user.entity';
+import { UserRepository } from 'src/repositories/user.repository';
+import { ProcesoLegalRepository } from 'src/repositories/proceso.repository';
 
 @Injectable()
 export class ProcesosService {
   constructor(
     @InjectRepository(ProcesoLegal)
-    private procesosRepository: Repository<ProcesoLegal>,
-    @InjectRepository(User)
-    private usersRepository: Repository<User>,
+    private procesosRepository: ProcesoLegalRepository, 
+    @InjectRepository(UserRepository)
+    private usersRepository: UserRepository
   ) {}
   async createProceso(createProcesoDto: CreateProcesoDto): Promise<ProcesoLegal> {
     const registrado = await this.procesosRepository.findOne({ where: { numeroProceso: createProcesoDto.numeroProceso } });
