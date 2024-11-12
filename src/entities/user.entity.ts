@@ -32,8 +32,8 @@ export class User {
   updatedAt?: Date;
 
   @OneToMany(() => ProcesoLegal, proceso => proceso.abogadoAsignado)
-  procesosLegales: ProcesoLegal[];
+  procesosLegales?: ProcesoLegal[];
 
   @OneToMany(() => Comentario, comentario => comentario.usuario)
-  comentarios: Comentario[];
+  comentarios?: Comentario[];
 }

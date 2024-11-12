@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException } from '@nestjs/common';
 import { ComentariosService } from './comentarios.service';
 import { CreateComentarioDto } from './dto/create-comentario.dto';
 import { UpdateComentarioDto } from './dto/update-comentario.dto';
@@ -8,27 +8,38 @@ export class ComentariosController {
   constructor(private readonly comentariosService: ComentariosService) {}
 
   @Post()
-  create(@Body() createComentarioDto: CreateComentarioDto) {
+  async create(@Body() createComentarioDto: CreateComentarioDto) {
     return this.comentariosService.createComentario(createComentarioDto);
   }
 
   @Get()
-  findAll() {
+  async findAll() {
     return this.comentariosService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.comentariosService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    const comentario = await this.comentariosService.findOne(+id);
+    if (!comentario) {
+      throw new NotFoundException('Comentario no encontrado');
+    }
+    return comentario;
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateComentarioDto: UpdateComentarioDto) {
-    return this.comentariosService.updateComentario(+id, updateComentarioDto);
+  async update(@Param('id') id: string, @Body() updateComentarioDto: UpdateComentarioDto) {
+    const updatedComentario = await this.comentariosService.updateComentario(+id, updateComentarioDto);
+    if (!updatedComentario) {
+      throw new NotFoundException('Comentario no encontrado');
+    }
+    return updatedComentario;
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.comentariosService.removeComentario(+id);
+  async remove(@Param('id') id: string) {
+    const result = await this.comentariosService.removeComentario(+id);
+    if (!result) {
+      throw new NotFoundException('Comentario no encontrado');
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsObject } from 'class-validator';
+import { IsString, IsNotEmpty, IsNumber } from 'class-validator';
 
 export class CreateProcesoDto {
   @IsString()
@@ -21,9 +21,9 @@ export class CreateProcesoDto {
   @IsNotEmpty()
   estado: string;
 
-  @IsObject()
+  @IsNumber()
   @IsNotEmpty()
-  abogadoAsignado: object;
+  abogadoAsignadoId: number;
 
   @IsNotEmpty()
   descripcion?: string;

@@ -1,24 +1,37 @@
-import { Injectable, ConflictException } from '@nestjs/common';
+import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProcesoLegal } from '../entities/proceso.entity';
 import { CreateProcesoDto } from './dto/create-proceso.dto';
 import { UpdateProcesoDto } from './dto/update-proceso.dto';
+import { User } from 'src/entities/user.entity';
 
 @Injectable()
 export class ProcesosService {
   constructor(
     @InjectRepository(ProcesoLegal)
     private procesosRepository: Repository<ProcesoLegal>,
+    @InjectRepository(User)
+    private usersRepository: Repository<User>,
   ) {}
   async createProceso(createProcesoDto: CreateProcesoDto): Promise<ProcesoLegal> {
     const registrado = await this.procesosRepository.findOne({ where: { numeroProceso: createProcesoDto.numeroProceso } });
 
     if (registrado) {
-      throw new ConflictException('El número de proceso ya existe'); // Lanza un error si ya existe
+      throw new ConflictException('El número de proceso ya existe');
     }
-    const procesoLegal = this.procesosRepository.create(createProcesoDto);
+
+    const abogado = await this.usersRepository.findOne({ where: { id: createProcesoDto.abogadoAsignadoId } });
+    if (!abogado) {
+      throw new NotFoundException('Abogado no encontrado');
+    }
+    const procesoLegal = this.procesosRepository.create({
+      ...createProcesoDto,
+      abogadoAsignado: abogado,
+      
+    });
     return await this.procesosRepository.save(procesoLegal);
+
   }
 
   async findAll(): Promise<ProcesoLegal[]>{
@@ -35,9 +48,17 @@ export class ProcesosService {
 
   async update(id: number, updateProcesoDto: UpdateProcesoDto): Promise<ProcesoLegal>{
     const procesoActualizado = await this.findOne(id)
-    Object.assign(procesoActualizado, updateProcesoDto);
 
-    return this.procesosRepository.save(procesoActualizado);
+    if (updateProcesoDto.abogadoAsignadoId) {
+      const nuevoAbogado = await this.usersRepository.findOne({ where: { id: updateProcesoDto.abogadoAsignadoId } });
+      if (!nuevoAbogado) {
+        throw new NotFoundException('Abogado no encontrado');
+      }
+
+      procesoActualizado.abogadoAsignado = nuevoAbogado;
+    }
+    Object.assign(procesoActualizado, updateProcesoDto);
+    return await this.procesosRepository.save(procesoActualizado);
   }
 
   async remove(id: number) {

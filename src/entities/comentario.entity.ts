@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { User } from './user.entity';
 import { ProcesoLegal } from './proceso.entity';
 
-@Entity('etapas_proceso')
+@Entity('comentarios_proceso')
 export class Comentario {
   @PrimaryGeneratedColumn()
   id: number;

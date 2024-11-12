@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProcesosModule } from './procesos/procesos.module';
 import { ComentariosModule } from './comentarios/comentarios.module';
 import { DocumentosModule } from './documentos/documentos.module';
+import { AudienciaModule } from './audiencia/audiencia.module';
 
 @Module({
   controllers: [AppController],
@@ -23,7 +24,8 @@ import { DocumentosModule } from './documentos/documentos.module';
     AuthModule,
     ProcesosModule,
     ComentariosModule,
-    DocumentosModule
+    DocumentosModule,
+    AudienciaModule
   ],
 })
 export class AppModule {}

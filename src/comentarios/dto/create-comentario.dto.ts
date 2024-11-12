@@ -1,13 +1,13 @@
-import { IsString, IsNotEmpty, IsObject } from 'class-validator';
+import { IsString, IsNotEmpty, IsNumber } from 'class-validator';
 export class CreateComentarioDto {
 
-  @IsObject()
+  @IsNumber()
   @IsNotEmpty()
-  usuario: object; 
+  usuarioId: number; 
 
-  @IsObject()
+  @IsNumber()
   @IsNotEmpty()
-  proceso: object;
+  procesoId: number;
 
   @IsString()
   @IsNotEmpty()

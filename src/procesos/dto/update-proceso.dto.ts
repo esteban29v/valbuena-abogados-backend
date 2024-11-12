@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsObject, IsEnum } from 'class-validator';
+import { IsString, IsOptional, IsNumber, IsEnum } from 'class-validator';
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateProcesoDto } from './create-proceso.dto';
 import { EtapaProceso, EtapasProceso } from '../etapas/etapa';
@@ -25,8 +25,8 @@ export class UpdateProcesoDto extends PartialType(CreateProcesoDto) {
   estado?: string;
 
   @IsOptional()
-  @IsObject()
-  abogadoAsignado?: object;
+  @IsNumber()
+  abogadoAsignadoId?: number;
 
   @IsOptional()
   @IsString()

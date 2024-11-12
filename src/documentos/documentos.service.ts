@@ -1,18 +1,34 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Documento } from 'src/entities/documento.entity';
 import { CreateDocumentoDto } from './dto/create-documento.dto';
 import { UpdateDocumentoDto } from './dto/update-documento.dto';
+import { ProcesoLegal } from 'src/entities/proceso.entity';
 
 @Injectable()
 export class DocumentosService {
   constructor(
     @InjectRepository(Documento) 
     private readonly documentoRepository: Repository<Documento>,
+    @InjectRepository(ProcesoLegal)
+    private procesosRepository: Repository<ProcesoLegal>,
   ) {}
   async create(createDocumentoDto: CreateDocumentoDto): Promise<Documento> {
-    const documento = this.documentoRepository.create(createDocumentoDto); 
+    const ingresado = await this.documentoRepository.findOne({where: {rutaArchivo: createDocumentoDto.rutaArchivo}})
+
+    if (ingresado) {
+      throw new ConflictException('El documento ya existe');
+    }
+
+    const proceso = await this.procesosRepository.findOne({ where: { id: createDocumentoDto.procesoId } })
+    if (!proceso) {
+      throw new NotFoundException('Proceso no encontrado');
+    }
+    const documento = this.documentoRepository.create({
+      ...createDocumentoDto,
+      proceso: proceso,
+    }); 
     return this.documentoRepository.save(documento);
   }
 
@@ -23,7 +39,7 @@ export class DocumentosService {
   async findOne(id: number): Promise<Documento> {
     const buscarDocumento = await this.documentoRepository.findOne({ where: { id } });
     if (!buscarDocumento) {
-      throw new Error('Archivo no encontrado');
+      throw new NotFoundException('Archivo no encontrado');
     }
     return buscarDocumento;
   }
