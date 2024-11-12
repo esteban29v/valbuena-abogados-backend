@@ -7,22 +7,22 @@ import { UpdateProcesoDto } from './dto/update-proceso.dto';
 export class ProcesosController {
   constructor(private readonly procesosService: ProcesosService) {}
 
-  @Post()
+  @Post('admin/nuevo_proceso')
   create(@Body() createProcesoDto: CreateProcesoDto) {
-    return this.procesosService.create(createProcesoDto);
+    return this.procesosService.createProceso(createProcesoDto);
   }
 
-  @Get()
+  @Get('admin/ver_procesos')
   findAll() {
     return this.procesosService.findAll();
   }
 
-  @Get(':id')
+  @Get('ver_proceso:id')
   findOne(@Param('id') id: string) {
     return this.procesosService.findOne(+id);
   }
 
-  @Patch(':id')
+  @Patch('actualizar_proceso:id')
   update(@Param('id') id: string, @Body() updateProcesoDto: UpdateProcesoDto) {
     return this.procesosService.update(+id, updateProcesoDto);
   }

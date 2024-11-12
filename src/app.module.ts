@@ -4,6 +4,8 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProcesosModule } from './procesos/procesos.module';
+import { ComentariosModule } from './comentarios/comentarios.module';
+import { DocumentosModule } from './documentos/documentos.module';
 
 @Module({
   controllers: [AppController],
@@ -19,7 +21,9 @@ import { ProcesosModule } from './procesos/procesos.module';
       synchronize: true,
     }),
     AuthModule,
-    ProcesosModule
+    ProcesosModule,
+    ComentariosModule,
+    DocumentosModule
   ],
 })
 export class AppModule {}

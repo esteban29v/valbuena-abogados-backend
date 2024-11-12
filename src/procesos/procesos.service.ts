@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, ConflictException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProcesoLegal } from '../entities/proceso.entity';
@@ -12,27 +12,32 @@ export class ProcesosService {
     private procesosRepository: Repository<ProcesoLegal>,
   ) {}
   async createProceso(createProcesoDto: CreateProcesoDto): Promise<ProcesoLegal> {
+    const registrado = await this.procesosRepository.findOne({ where: { numeroProceso: createProcesoDto.numeroProceso } });
+
+    if (registrado) {
+      throw new ConflictException('El número de proceso ya existe'); // Lanza un error si ya existe
+    }
     const procesoLegal = this.procesosRepository.create(createProcesoDto);
     return await this.procesosRepository.save(procesoLegal);
   }
 
   async findAll(): Promise<ProcesoLegal[]>{
-    return this.procesosRepository.find();
+    return await this.procesosRepository.find();
   }
 
   async findOne(id: number): Promise<ProcesoLegal>{
-    const proceso = await this.procesosRepository.findOne({ where: { id } });
-    if (!proceso) {
+    const procesoBuscado = await this.procesosRepository.findOne({ where: { id } });
+    if (!procesoBuscado) {
       throw new Error('Proceso no encontrado');
     }
-    return proceso;
+    return procesoBuscado;
   }
 
   async update(id: number, updateProcesoDto: UpdateProcesoDto): Promise<ProcesoLegal>{
-    const proceso = await this.findOne(id)
-    Object.assign(proceso, updateProcesoDto);
+    const procesoActualizado = await this.findOne(id)
+    Object.assign(procesoActualizado, updateProcesoDto);
 
-    return this.procesosRepository.save(proceso);
+    return this.procesosRepository.save(procesoActualizado);
   }
 
   async remove(id: number) {
