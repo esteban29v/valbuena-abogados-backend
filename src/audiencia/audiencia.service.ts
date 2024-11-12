@@ -12,7 +12,6 @@ export class AudienciaService {
   constructor(
     @InjectRepository(Audiencia)
     private audienciaRepository: AudienciaRepository,
-    @InjectRepository(ProcesoLegal)
     private procesosRepository: ProcesoLegalRepository,
   ) {}
   async create(createAudienciaDto: CreateAudienciaDto) {

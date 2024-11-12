@@ -13,7 +13,6 @@ export class ComentariosService {
   constructor(
     @InjectRepository(Comentario)
     private ComentarioRepository: ComentarioRepository,
-    @InjectRepository(ProcesoLegal)
     private procesosRepository: ProcesoLegalRepository, 
     @InjectRepository(UserRepository)
     private usersRepository: UserRepository

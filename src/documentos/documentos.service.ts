@@ -12,7 +12,6 @@ export class DocumentosService {
   constructor(
     @InjectRepository(Documento) 
     private readonly documentoRepository: DocumentoRepository,
-    @InjectRepository(ProcesoLegal)
     private procesosRepository: ProcesoLegalRepository 
   ) {}
   async create(createDocumentoDto: CreateDocumentoDto): Promise<Documento> {
