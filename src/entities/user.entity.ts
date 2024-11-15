@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { ProcesoLegal } from './proceso.entity';
 import { Comentario } from './comentario.entity';
+import { UserSession } from './user-session.entity';
 
 @Entity('users')
 export class User {
@@ -36,4 +37,7 @@ export class User {
 
   @OneToMany(() => Comentario, comentario => comentario.usuario)
   comentarios?: Comentario[];
+
+  @OneToMany(() => UserSession, (userSession) => userSession.user)  // Relación uno a muchos
+  sessions: UserSession[];
 }

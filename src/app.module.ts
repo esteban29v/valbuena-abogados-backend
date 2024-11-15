@@ -14,12 +14,15 @@ import { AudienciaModule } from './audiencia/audiencia.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',  
-      host: 'localhost',  
+      host: '172.21.0.14',  
       port: 3306,
       username: 'root', 
-      database: 'valbuena_abogados',  
+      database: 'valbuena_abogados',
+      password: 'toor',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      //entities: ['dist/**/**/*.entity{.ts,.js}'],
       synchronize: true,
+      autoLoadEntities: true,
     }),
     AuthModule,
     ProcesosModule,

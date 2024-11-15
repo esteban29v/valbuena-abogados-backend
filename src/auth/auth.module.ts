@@ -7,6 +7,8 @@ import { User } from '../entities/user.entity';
 import { UserRepository } from '../repositories/user.repository';
 import { JwtStrategy } from './jwt.strategy'; // Importa la estrategia JWT
 import { JwtAuthGuard } from './jwt-auth.guard'; // Importa el guardia JWT
+import { UserSessionRepository } from '../repositories/user-session.repository';
+import { UserSession } from '../entities/user-session.entity';
 
 @Module({
   imports: [
@@ -14,7 +16,7 @@ import { JwtAuthGuard } from './jwt-auth.guard'; // Importa el guardia JWT
       secret: process.env.JWT_SECRET || 'default_secret', // Cambia esto a un secreto más seguro en producción
       signOptions: { expiresIn: '60s' }, // Define el tiempo de expiración del token
     }),
-    TypeOrmModule.forFeature([User])
+    TypeOrmModule.forFeature([User, UserSessionRepository, UserSession])
   ],
   providers: [AuthService, UserRepository, JwtStrategy],
   controllers: [AuthController],

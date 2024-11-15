@@ -1,5 +1,5 @@
 // auth.controller.ts
-import { Controller, Post, Body, HttpStatus, Res, UnauthorizedException, UseGuards, Get } from '@nestjs/common';
+import { Controller, Post, Body, HttpStatus, Res, UnauthorizedException, UseGuards, Get, HttpCode, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { User } from 'src/entities/user.entity';
 
@@ -9,7 +9,9 @@ import { JwtAuthGuard } from './jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+  ) {}
 
   @UseGuards(JwtAuthGuard)
   @Get('testing-guard')
@@ -19,7 +21,7 @@ export class AuthController {
 
   @Post('login')
   async login(@Body() user: User) {
-    const validatedUser = await this.authService.validateUser(user.username, user.password);
+    const validatedUser = await this.authService.validateUser(user.email, user.password);
     if (!validatedUser) {
       throw new UnauthorizedException('Invalid credentials');
     }
@@ -66,5 +68,19 @@ export class AuthController {
       errors,
       timestamp: new Date().toISOString(),
     });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('logout')
+  async logout(@Req() req) {
+    const userId = req.user.id; // El ID del usuario que se obtiene del JWT
+    const accessToken = req.headers.authorization?.split(' ')[1]; // Obtener el token del header
+
+    console.log(req.user, accessToken);
+
+    // Invalidate the token in the database
+    await this.authService.logout(userId, accessToken);
+
+    return { message: 'Logout successful' };
   }
 }
